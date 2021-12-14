@@ -1,3 +1,5 @@
+from queue import Queue
+
 class Module:
     """
     Modules form a tree that store parameters and other
@@ -21,25 +23,53 @@ class Module:
 
     def train(self):
         "Set the mode of this module and all descendent modules to `train`."
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        # raise NotImplementedError('Need to implement for Task 0.4')
+        for module in self.__dict__["_modules"].values():
+            if not module.training:
+                module.train()
+        self.training = True
 
     def eval(self):
         "Set the mode of this module and all descendent modules to `eval`."
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        # raise NotImplementedError('Need to implement for Task 0.4')
+        for module in self.__dict__["_modules"].values():
+            if module.training:
+                module.eval()
+        self.training = False
 
     def named_parameters(self):
         """
         Collect all the parameters of this module and its descendents.
-
+ 
 
         Returns:
             list of pairs: Contains the name and :class:`Parameter` of each ancestor parameter.
         """
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        # raise NotImplementedError('Need to implement for Task 0.4')
+        q = Queue()
+        named_params = list(self.__dict__["_parameters"].items())
+
+        for name, module in self.__dict__["_modules"].items():
+            q.put((name, module))
+        
+        while not q.empty():
+            parent_name, parent_module = q.get()
+            for name, child_module in parent_module.__dict__["_modules"].items():
+                q.put((".".join([parent_name, name]), child_module))
+            for name, param in parent_module.__dict__["_parameters"].items():
+                named_params.append((".".join([parent_name, name]), param))
+
+        return named_params
 
     def parameters(self):
         "Enumerate over all the parameters of this module and its descendents."
-        raise NotImplementedError('Need to include this file from past assignment.')
+        # TODO: Implement for Task 0.4.
+        # raise NotImplementedError('Need to implement for Task 0.4')
+        return [param for _, param in self.named_parameters()]
+
 
     def add_parameter(self, k, v):
         """
