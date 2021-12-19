@@ -108,9 +108,9 @@ def relu(x):
     # TODO: Implement for Task 0.1.
     # raise NotImplementedError('Need to implement for Task 0.1')
     if x > 0:
-        return x
+        return float(x)
     else:
-        return 0
+        return 0.0
 
 
 EPS = 1e-6
